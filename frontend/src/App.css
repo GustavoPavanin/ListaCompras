@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  background-color: #f4f6f8;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.MuiContainer-root {
+  padding-bottom: 40px;
+}
