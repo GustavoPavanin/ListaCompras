@@ -26,7 +26,7 @@ import {
   deleteShoppingList,
   getShoppingListById,
   updateShoppingList,
-} from '../api/mockBackend';
+} from '../api/api';
 
 export default function ShoppingListEditor() {
   const { id } = useParams();
@@ -35,6 +35,7 @@ export default function ShoppingListEditor() {
 
   const [list, setList] = useState(null);
   const [newItemText, setNewItemText] = useState('');
+  const [newItemQuantidade, setNewItemQuantidade] = useState(1);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -67,9 +68,11 @@ export default function ShoppingListEditor() {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       texto: text,
       atendido: false,
+      quantidade: newItemQuantidade || 1,
     };
     setList({ ...list, itens: [...list.itens, nextItem] });
     setNewItemText('');
+    setNewItemQuantidade(1);
   };
 
   const handleToggleItem = (itemId) => {
@@ -169,18 +172,28 @@ export default function ShoppingListEditor() {
       </Stack>
 
       <Box mb={3}>
-        <TextField
-          value={newItemText}
-          onChange={(event) => setNewItemText(event.target.value)}
-          label="Adicionar item"
-          fullWidth
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              handleAddItem();
-            }
-          }}
-        />
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+          <TextField
+            value={newItemText}
+            onChange={(event) => setNewItemText(event.target.value)}
+            label="Adicionar item"
+            fullWidth
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                handleAddItem();
+              }
+            }}
+          />
+          <TextField
+            type="number"
+            value={newItemQuantidade}
+            onChange={(event) => setNewItemQuantidade(parseFloat(event.target.value) || 1)}
+            label="Qtd"
+            sx={{ width: { xs: '100%', sm: '100px' } }}
+            inputProps={{ min: 0.1, step: 0.1 }}
+          />
+        </Stack>
         <Button
           sx={{ mt: 2, width: { xs: '100%', sm: 'auto' } }}
           variant="contained"
@@ -209,7 +222,7 @@ export default function ShoppingListEditor() {
                 <Checkbox edge="start" checked={item.atendido} tabIndex={-1} disableRipple />
               </ListItemIcon>
               <ListItemText
-                primary={item.texto}
+                primary={`${item.quantidade || 1}x ${item.texto}`}
                 sx={{
                   textDecoration: item.atendido ? 'line-through' : 'none',
                   color: item.atendido ? theme.palette.text.disabled : theme.palette.text.primary,

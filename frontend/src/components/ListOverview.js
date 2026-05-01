@@ -10,7 +10,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { getShoppingLists, createShoppingList } from '../api/mockBackend';
+import { getShoppingLists, createShoppingList } from '../api/api';
 
 export default function ListOverview() {
   const [lists, setLists] = useState([]);
@@ -75,7 +75,7 @@ export default function ListOverview() {
                     {list.nome}
                   </Typography>
                   <Typography color="text.secondary">
-                    {list.itens.length} item{list.itens.length === 1 ? '' : 's'}
+                    {list.quantidadeItens} item{list.quantidadeItens === 1 ? '' : 's'}
                   </Typography>
                 </CardContent>
                 <CardActions>
